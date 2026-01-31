@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import login
+from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 
 def register(request):
@@ -18,4 +18,4 @@ def register(request):
 
     # Display a blank or invalid form.
     context = {'form': form}
-    return render(request, 'accounts/register.html', context)
+    return render(request, 'registration/register.html', context)
