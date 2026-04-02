@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.contrib import messages
 
 from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
@@ -42,6 +43,7 @@ def new_topic(request):
             new_topic = form.save(commit=False)
             new_topic.owner = request.user
             new_topic.save()
+            messages.success(request, "New topic added successfully!")
             return redirect('learning_logs:topics')
 
     # Display a blank or invalid form.
@@ -63,6 +65,7 @@ def new_entry(request, topic_id):
             new_entry = form.save(commit=False)
             new_entry.topic = topic
             new_entry.save()
+            messages.success(request, "New entry added successfully!")
             return redirect('learning_logs:topic', topic_id=topic_id)
 
     # Display a blank or invalid form.
@@ -86,6 +89,7 @@ def edit_entry(request, entry_id):
         form = EntryForm(instance=entry, data=request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Entry updated successfully!")
             return redirect('learning_logs:topic', topic_id=topic.id)
 
     context = {'entry': entry, 'topic': topic, 'form': form}
