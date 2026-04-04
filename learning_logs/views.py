@@ -19,7 +19,8 @@ def topics(request):
 @login_required
 def topic(request, topic_id):
     """Show a single topic and all its entries."""
-    topic = Topic.objects.get(id=topic_id)
+    # Use select_related to fetch the owner in the same query.
+    topic = Topic.objects.select_related('owner').get(id=topic_id)
     
     # Make sure the topic bellongs to the current user.
     if topic.owner != request.user:
@@ -51,7 +52,12 @@ def new_topic(request):
 @login_required
 def new_entry(request, topic_id):
     """Add a new entry for a particular topic."""
-    topic = Topic.objects.get(id=topic_id)
+    # Use select_related to fetch the owner in the same query.
+    topic = Topic.objects.select_related('owner').get(id=topic_id)
+
+    # Make sure the topic belongs to the current user.
+    if topic.owner != request.user:
+        raise Http404
 
     if request.method != 'POST':
         # No data submitted; create a blank form.
@@ -72,7 +78,8 @@ def new_entry(request, topic_id):
 @login_required
 def edit_entry(request, entry_id):
     """Edit an existing entry."""
-    entry = Entry.objects.get(id=entry_id)
+    # Use select_related to fetch the topic and its owner in the same query.
+    entry = Entry.objects.select_related('topic__owner').get(id=entry_id)
     topic = entry.topic
 
     if topic.owner != request.user:
