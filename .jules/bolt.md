@@ -1,0 +1,3 @@
+## 2026-04-05 - Optimized Database Queries and Added Indexes
+**Learning:** In Django views, combined object retrieval and ownership checks using `get_object_or_404` with filters (e.g., `owner=request.user`) significantly reduces the number of database queries by avoiding separate checks that often trigger extra `User` table lookups. Using `select_related` for ForeignKey relationships (like `Entry -> Topic`) can combine two queries into one JOINed query.
+**Action:** Always prefer filtering by the owner in the initial `get()` or `get_object_or_404()` call and use `select_related` when both the child and parent objects are needed in a view.
