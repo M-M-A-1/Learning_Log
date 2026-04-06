@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 
@@ -19,11 +19,8 @@ def topics(request):
 @login_required
 def topic(request, topic_id):
     """Show a single topic and all its entries."""
-    topic = Topic.objects.get(id=topic_id)
-    
-    # Make sure the topic bellongs to the current user.
-    if topic.owner != request.user:
-        raise Http404
+    # Combine retrieval and ownership check into one query.
+    topic = get_object_or_404(Topic, id=topic_id, owner=request.user)
 
     entries = topic.entry_set.order_by('-date_added')
     context = {'topic': topic, 'entries': entries}
@@ -51,7 +48,7 @@ def new_topic(request):
 @login_required
 def new_entry(request, topic_id):
     """Add a new entry for a particular topic."""
-    topic = Topic.objects.get(id=topic_id)
+    topic = get_object_or_404(Topic, id=topic_id, owner=request.user)
 
     if request.method != 'POST':
         # No data submitted; create a blank form.
@@ -72,11 +69,13 @@ def new_entry(request, topic_id):
 @login_required
 def edit_entry(request, entry_id):
     """Edit an existing entry."""
-    entry = Entry.objects.get(id=entry_id)
+    # Use select_related and combined ownership filter for efficiency.
+    entry = get_object_or_404(
+        Entry.objects.select_related('topic'),
+        id=entry_id,
+        topic__owner=request.user
+    )
     topic = entry.topic
-
-    if topic.owner != request.user:
-        raise Http404
 
     if request.method != 'POST':
         # Initial request; pre-fill form with the current entry.
