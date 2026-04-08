@@ -1,0 +1,3 @@
+## 2025-05-15 - SQLite Indexing and Binary Assets
+**Learning:** Adding indexes to `DateTimeField` used for ordering (`ORDER BY`) provides a measurable performance boost even on SQLite, although the gain is relatively small for in-memory or small-scale file databases compared to production-grade DBs like PostgreSQL. Crucially, in this environment, `db.sqlite3` is a tracked asset, and running migrations locally modifies this binary file.
+**Action:** Always use `git restore db.sqlite3` after running migrations or tests to avoid committing binary database changes, and rely on migration files to propagate schema updates.
