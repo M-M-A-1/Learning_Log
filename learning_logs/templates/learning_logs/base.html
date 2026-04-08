@@ -25,7 +25,9 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'learning_logs:topics' %}">
+                        <a class="nav-link{% if request.resolver_match.app_name == 'learning_logs' and request.resolver_match.url_name != 'index' %} active{% endif %}"
+                           href="{% url 'learning_logs:topics' %}"
+                           {% if request.resolver_match.app_name == 'learning_logs' and request.resolver_match.url_name != 'index' %}aria-current="page"{% endif %}>
                         Topics</a>
                     </li>
                 </ul> <!-- End of links on left side of navbar -->
@@ -38,10 +40,14 @@
                                 </span></li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:register' %}">
+                            <a class="nav-link{% if request.resolver_match.view_name == 'accounts:register' %} active{% endif %}"
+                               href="{% url 'accounts:register' %}"
+                               {% if request.resolver_match.view_name == 'accounts:register' %}aria-current="page"{% endif %}>
                                 Register</a></li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:login' %}">
+                            <a class="nav-link{% if request.resolver_match.view_name == 'accounts:login' %} active{% endif %}"
+                               href="{% url 'accounts:login' %}"
+                               {% if request.resolver_match.view_name == 'accounts:login' %}aria-current="page"{% endif %}>
                               Login</a></li>
                     {% endif %}
                 </ul> <!-- End of account-related links -->
