@@ -1,0 +1,3 @@
+## 2026-04-08 - Active Link Highlighting in Django + Bootstrap
+**Learning:** Using `request.resolver_match` in Django templates provides a robust way to implement active link highlighting and accessible orientation (`aria-current="page"`) without passing extra context from views. For applications with hierarchical structures, matching by `app_name` allows a "section-wide" active state, while matching by `view_name` or `url_name` allows for specific link highlighting.
+**Action:** Use `{% if request.resolver_match.app_name == 'app_name' %}` for section-based active states and `request.resolver_match.view_name` for exact page matches in navbar components.
