@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
+from django_ratelimit.decorators import ratelimit
 
+@ratelimit(key='ip', rate='5/h')
 def register(request):
     """Register a new user."""
     if request.method != 'POST':
